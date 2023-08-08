@@ -23,6 +23,14 @@ public class ItemRepositoryInMemory implements ItemRepository {
     }
 
     @Override
+    public Collection<Item> search(String text) {
+        return items.values()
+                .stream()
+                .filter(s -> s.getAvailable() && (s.getName().contains(text) || s.getDescription().contains(text)))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public Item getItem(long id) {
         if (!items.containsKey(id)) throw new NoSuchItemException("Вещь " + id + " не существует");
         return items.get(id);

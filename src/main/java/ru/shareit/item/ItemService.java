@@ -26,6 +26,10 @@ public class ItemService {
         return ItemMapper.pojoToDto(itemRepository.getItem(id));
     }
 
+    public Collection<ItemDto> search(String text) {
+        return itemRepository.search(text).stream().map(ItemMapper::pojoToDto).toList();
+    }
+
     public ItemDto createItem(ItemDto itemDto, long userId) {
         Item item = ItemMapper.dtoToPojo(itemDto);
         User owner = userRepository.getUser(userId);

@@ -25,6 +25,11 @@ public class ItemController {
         return itemService.getItem(id);
     }
 
+    @GetMapping("/search")
+    public Collection<ItemDto> search(@RequestParam("text") String text) {
+        return itemService.search(text);
+    }
+
     @PostMapping()
     public ItemDto createItem(@Valid @RequestBody ItemDto item, @RequestHeader("X-ShareIt-User-Id") Long userId) {
         return itemService.createItem(item, userId);
