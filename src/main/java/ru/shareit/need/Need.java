@@ -1,20 +1,31 @@
 package ru.shareit.need;
 
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 import ru.shareit.item.Item;
 import ru.shareit.user.User;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Builder
+@Entity
+@Table(name = "needs")
 public class Need {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
     private String description;
-    private List<Item> offers = new ArrayList<>();
+    @ManyToMany
+    @JoinTable(name = "items_needs",
+            joinColumns = @JoinColumn (name = "need_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn (name = "item_id", referencedColumnName = "id"))
+    private Set<Item> offers = new HashSet<>();
 
 }
