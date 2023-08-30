@@ -1,16 +1,17 @@
 package ru.shareit.need;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import ru.shareit.item.Item;
 import ru.shareit.user.User;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
-@Builder
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
 @Entity
 @Table(name = "needs")
 public class Need {

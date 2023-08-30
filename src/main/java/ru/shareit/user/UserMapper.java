@@ -3,16 +3,16 @@ package ru.shareit.user;
 public class UserMapper {
 
     public static User dtoToPojo(UserDto dto) {
-        return User.builder()
-                .name(dto.getName())
-                .email(dto.getEmail())
-                .build();
+        User pojo = new User();
+        pojo.setName(dto.getName());
+        pojo.setEmail(dto.getEmail());
+        return pojo;
     }
 
     public static UserDto pojoToDto(User pojo) {
-        return UserDto.builder()
-                .name(pojo.getName())
-                .email(pojo.getEmail())
-                .build();
+        UserDto dto = new UserDto();
+        dto.setName(pojo.getName());
+        dto.setEmail(pojo.getEmail());
+        return dto;
     }
 }

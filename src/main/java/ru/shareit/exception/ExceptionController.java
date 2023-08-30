@@ -1,6 +1,8 @@
 package ru.shareit.exception;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -14,7 +16,17 @@ import java.util.Map;
 @RestControllerAdvice
 public class ExceptionController {
 
-    @ExceptionHandler(NoSuchUserException.class)
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> sqlExceptionHandler(Exception e) {
+        if (e.getClass() == DataIntegrityViolationException.class && e.getMessage().contains("повторяющееся значение ключа нарушает ограничение уникальности \"unique_name_for_user\""))
+            return Map.of("ошибка: ", "У вас уже есть вещь с таким именем");
+        else if (e.getClass() == DataIntegrityViolationException.class && e.getMessage().contains("повторяющееся значение ключа нарушает ограничение уникальности \"unique_email\""))
+            return Map.of("ошибка: ", "Эта почта уже используется");
+        else return Map.of("ошибка: ", e.getMessage());
+    }
+
+    @ExceptionHandler({NoSuchUserException.class, NoSuchItemException.class, EntityNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, String> objectNotFoundHandler(Exception e) {
         return Map.of("ошибка: ", e.getMessage());

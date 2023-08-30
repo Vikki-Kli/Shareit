@@ -1,15 +1,19 @@
 package ru.shareit.user;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import ru.shareit.exception.NoSuchUserException;
 
 import java.util.Collection;
 
 @Service
+@Slf4j
 public class UserService {
 
-    private UserRepositoryInMemory userRepository;
+    private UserRepository userRepository;
 
-    public UserService(UserRepositoryInMemory userRepository) {
+    public UserService(@Qualifier("userRepositoryJPA") UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -18,20 +22,34 @@ public class UserService {
     }
 
     public UserDto getUser(long id) {
-        return UserMapper.pojoToDto(userRepository.getUser(id));
+        checkUserById(id);
+        return UserMapper.pojoToDto(userRepository.getById(id).get());
     }
 
     public UserDto createUser(UserDto userDto) {
-        User user = UserMapper.dtoToPojo(userDto);
-        return UserMapper.pojoToDto(userRepository.createUser(user));
+        User user = userRepository.save(UserMapper.dtoToPojo(userDto));
+        log.info("Создан пользователь " + user);
+        return UserMapper.pojoToDto(user);
     }
 
     public UserDto editUser(UserDto userDto, long id) {
+        checkUserById(id);
         User user = UserMapper.dtoToPojo(userDto);
-        return UserMapper.pojoToDto(userRepository.editUser(user, id));
+        user.setId(id);
+        User savedUser = userRepository.save(user);
+        log.info("Изменен пользователь " + savedUser);
+        return UserMapper.pojoToDto(savedUser);
     }
 
     public void deleteUser(long id) {
-        userRepository.deleteUser(id);
+        checkUserById(id);
+        userRepository.deleteById(id);
+        log.info("Удален пользователь " + id);
+    }
+
+    public void checkUserById(long userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new NoSuchUserException("Не найден пользователь " + userId);
+        }
     }
 }

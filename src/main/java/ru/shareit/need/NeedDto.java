@@ -1,11 +1,11 @@
 package ru.shareit.need;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
-@Data
-@Builder
+@Getter
+@Setter
+@NoArgsConstructor
 public class NeedDto {
 
     @NotBlank

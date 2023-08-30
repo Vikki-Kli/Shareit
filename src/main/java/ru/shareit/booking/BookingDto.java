@@ -1,13 +1,13 @@
 package ru.shareit.booking;
 
 import jakarta.validation.constraints.FutureOrPresent;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDate;
 
-@Data
-@Builder
+@Getter
+@Setter
+@NoArgsConstructor
 public class BookingDto {
 
     @FutureOrPresent

@@ -3,14 +3,14 @@ package ru.shareit.need;
 public class NeedMapper {
 
     public static Need dtoToPojo(NeedDto dto) {
-        return Need.builder()
-                .description(dto.getDescription())
-                .build();
+        Need pojo = new Need();
+        pojo.setDescription(dto.getDescription());
+        return pojo;
     }
 
     public static NeedDto pojoToDto(Need pojo) {
-        return NeedDto.builder()
-                .description(pojo.getDescription())
-                .build();
+        NeedDto dto = new NeedDto();
+        dto.setDescription(pojo.getDescription());
+        return dto;
     }
 }

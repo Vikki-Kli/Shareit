@@ -3,18 +3,18 @@ package ru.shareit.item;
 public class ItemMapper {
 
     public static Item dtoToPojo(ItemDto dto) {
-        return Item.builder()
-                .name(dto.getName())
-                .description(dto.getDescription())
-                .available(dto.getAvailable())
-                .build();
+        Item pojo = new Item();
+        pojo.setName(dto.getName());
+        pojo.setDescription(dto.getDescription());
+        pojo.setAvailable(dto.getAvailable());
+        return pojo;
     }
 
     public static ItemDto pojoToDto(Item pojo) {
-        return ItemDto.builder()
-                .name(pojo.getName())
-                .description(pojo.getDescription())
-                .available(pojo.getAvailable())
-                .build();
+        ItemDto dto = new ItemDto();
+        dto.setName(pojo.getName());
+        dto.setDescription(pojo.getDescription());
+        dto.setAvailable(pojo.getAvailable());
+        return dto;
     }
 }

@@ -1,6 +1,7 @@
 package ru.shareit.item;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 import ru.shareit.exception.NoSuchItemException;
 import ru.shareit.user.User;
@@ -8,9 +9,11 @@ import ru.shareit.user.User;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
+@Lazy
 @Slf4j
 public class ItemRepositoryInMemory implements ItemRepository {
 
@@ -18,12 +21,12 @@ public class ItemRepositoryInMemory implements ItemRepository {
     private static long countId = 0;
 
     @Override
-    public Collection<Item> findAll(User user) {
+    public Collection<Item> findAllByOwner(User user) {
         return items.values().stream().filter(s -> s.getOwner().equals(user)).collect(Collectors.toList());
     }
 
     @Override
-    public Collection<Item> search(String text) {
+    public Collection<Item> findByDescriptionContainingIgnoreCase(String text) {
         return items.values()
                 .stream()
                 .filter(s -> s.getAvailable() && (s.getName().contains(text) || s.getDescription().contains(text)))
@@ -31,31 +34,31 @@ public class ItemRepositoryInMemory implements ItemRepository {
     }
 
     @Override
-    public Item getItem(long id) {
+    public Optional<Item> getById(long id) {
         if (!items.containsKey(id)) throw new NoSuchItemException("Вещь " + id + " не существует");
-        return items.get(id);
+        return Optional.ofNullable(items.get(id));
     }
 
     @Override
-    public Item createItem(Item item) {
-        countId++;
-        item.setId(countId);
-        items.put(countId, item);
-        log.info("{} has been created", item);
-        return getItem(countId);
-    }
-
-    @Override
-    public Item editItem(Item item, long id) {
-        if (!items.containsKey(id)) throw new NoSuchItemException("Вещь " + id + " не существует");
-        items.put(id, item);
+    public Item save(Item item) {
+        if (item.getId() == null) {
+            countId++;
+            item.setId(countId);
+            log.info("{} has been created", item);
+        }
+        items.put(item.getId(), item);
         log.info("{} has been edited", item);
-        return getItem(id);
+        return getById(item.getId()).get();
     }
 
     @Override
-    public void deleteItem(long id) {
+    public void deleteById(long id) {
         if (!items.containsKey(id)) throw new NoSuchItemException("Вещь " + id + " не существует");
         items.remove(id);
+    }
+
+    @Override
+    public boolean existsById(long id) {
+        return items.containsKey(id);
     }
 }

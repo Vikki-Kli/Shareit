@@ -3,18 +3,18 @@ package ru.shareit.booking;
 public class BookingMapper {
 
     public static Booking dtoToPojo(BookingDto dto) {
-        return Booking.builder()
-                .start(dto.getStart())
-                .finish(dto.getFinish())
-                .feedback(dto.getFeedback())
-                .build();
+        Booking pojo = new Booking();
+        pojo.setStart(dto.getStart());
+        pojo.setFinish(dto.getFinish());
+        pojo.setFeedback(dto.getFeedback());
+        return pojo;
     }
 
     public static BookingDto pojoToDto(Booking pojo) {
-        return BookingDto.builder()
-                .start(pojo.getStart())
-                .finish(pojo.getFinish())
-                .feedback(pojo.getFeedback())
-                .build();
+        BookingDto dto = new BookingDto();
+        dto.setStart(pojo.getStart());
+        dto.setFinish(pojo.getFinish());
+        dto.setFeedback(pojo.getFeedback());
+        return dto;
     }
 }

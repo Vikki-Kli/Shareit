@@ -1,16 +1,17 @@
 package ru.shareit.item;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import ru.shareit.need.Need;
 import ru.shareit.user.User;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
-@Builder
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
 @Entity
 @Table(name = "items")
 public class Item {

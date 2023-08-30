@@ -1,15 +1,16 @@
 package ru.shareit.booking;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import ru.shareit.item.Item;
 import ru.shareit.user.User;
 
 import java.time.LocalDate;
 
-@Data
-@Builder
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
 @Entity
 @Table(name = "bookings")
 public class Booking {
