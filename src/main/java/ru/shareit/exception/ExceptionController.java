@@ -17,7 +17,7 @@ import java.util.Map;
 public class ExceptionController {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> sqlExceptionHandler(Exception e) {
         if (e.getClass() == DataIntegrityViolationException.class && e.getMessage().contains("повторяющееся значение ключа нарушает ограничение уникальности \"unique_name_for_user\""))
             return Map.of("ошибка: ", "У вас уже есть вещь с таким именем");

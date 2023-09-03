@@ -45,6 +45,6 @@ public class ItemController {
     @DeleteMapping("/{id}")
     public String deleteItem(@PathVariable long id, @RequestHeader("X-ShareIt-User-Id") long userId) {
         itemService.deleteItem(id, userId);
-        return "Вещь " + id + " удалена";
+        return "Item " + id + " has been deleted";
     }
 }

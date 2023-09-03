@@ -45,9 +45,9 @@ public class ItemService {
     public ItemDto createItem(ItemDto itemDto, long userId) {
         Item item = ItemMapper.dtoToPojo(itemDto);
         userService.checkUserById(userId);
-        userRepository.existsById(userId);
         User owner = userRepository.getById(userId).get();
         item.setOwner(owner);
+
         Item savedItem = itemRepository.save(item);
         log.info("Создано " + savedItem);
         return ItemMapper.pojoToDto(savedItem);
@@ -56,12 +56,15 @@ public class ItemService {
     public ItemDto editItem(ItemDto itemDto, long id, long userId) {
         checkItemById(id);
         userService.checkUserById(userId);
+
         User owner = userRepository.getById(userId).get();
         Item item = itemRepository.getById(id).get();
         if (!item.getOwner().equals(owner)) throw new AccessException("Редактировать ресурс может только его автор");
+
         item = ItemMapper.dtoToPojo(itemDto);
         item.setOwner(owner);
         item.setId(id);
+
         Item savedItem = itemRepository.save(item);
         log.info("Изменено " + savedItem);
         return ItemMapper.pojoToDto(savedItem);
@@ -70,9 +73,11 @@ public class ItemService {
     public void deleteItem(long id, long userId) {
         checkItemById(id);
         userService.checkUserById(userId);
+
         User owner = userRepository.getById(userId).get();
         Item item = itemRepository.getById(id).get();
         if (!item.getOwner().equals(owner)) throw new AccessException("Удалить ресурс может только его автор");
+
         itemRepository.deleteById(id);
         log.info("Удалена вещь " + id);
     }
