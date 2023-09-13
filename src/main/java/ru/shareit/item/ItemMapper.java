@@ -6,7 +6,7 @@ public class ItemMapper {
         Item pojo = new Item();
         pojo.setName(dto.getName());
         pojo.setDescription(dto.getDescription());
-        pojo.setAvailable(dto.getAvailable());
+        pojo.setAvailable(dto.isAvailable());
         return pojo;
     }
 

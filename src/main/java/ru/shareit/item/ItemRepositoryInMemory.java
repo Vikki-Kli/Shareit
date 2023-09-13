@@ -47,7 +47,7 @@ public class ItemRepositoryInMemory implements ItemRepository {
             log.info("{} has been created", item);
         }
         items.put(item.getId(), item);
-        log.info("{} has been edited", item);
+        log.info("{} has been saved", item);
         return getById(item.getId()).get();
     }
 

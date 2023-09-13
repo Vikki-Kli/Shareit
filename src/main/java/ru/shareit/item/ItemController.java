@@ -16,7 +16,7 @@ public class ItemController {
     }
 
     @GetMapping()
-    public Collection<ItemDto> findAll(@RequestHeader("X-ShareIt-User-Id") Long userId) {
+    public Collection<ItemDto> findAll(@RequestHeader("X-ShareIt-User-Id") long userId) {
         return itemService.findAll(userId);
     }
 
@@ -31,14 +31,14 @@ public class ItemController {
     }
 
     @PostMapping()
-    public ItemDto createItem(@Valid @RequestBody ItemDto item, @RequestHeader("X-ShareIt-User-Id") Long userId) {
+    public ItemDto createItem(@Valid @RequestBody ItemDto item, @RequestHeader("X-ShareIt-User-Id") long userId) {
         return itemService.createItem(item, userId);
     }
 
     @PatchMapping("/{id}")
     public ItemDto editItem(@Valid @RequestBody ItemDto item,
                             @PathVariable long id,
-                            @RequestHeader("X-ShareIt-User-Id") Long userId) {
+                            @RequestHeader("X-ShareIt-User-Id") long userId) {
         return itemService.editItem(item, id, userId);
     }
 

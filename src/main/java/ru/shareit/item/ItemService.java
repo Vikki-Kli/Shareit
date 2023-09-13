@@ -3,6 +3,7 @@ package ru.shareit.item;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.shareit.exception.AccessException;
 import ru.shareit.exception.NoSuchItemException;
 import ru.shareit.user.User;
@@ -13,6 +14,7 @@ import java.util.Collection;
 
 @Service
 @Slf4j
+@Transactional
 public class ItemService {
 
     private ItemRepository itemRepository;

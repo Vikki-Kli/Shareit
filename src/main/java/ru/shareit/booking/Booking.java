@@ -26,6 +26,7 @@ public class Booking {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User renter;
-    private String feedback;
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.WAITING;
 
 }

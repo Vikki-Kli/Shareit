@@ -8,12 +8,11 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor
-public class BookingDto {
+public class BookingDtoIn {
 
     @FutureOrPresent
     private LocalDate start;
     @FutureOrPresent
     private LocalDate finish;
-    private String feedback = "";
 
 }
