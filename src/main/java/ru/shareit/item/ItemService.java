@@ -30,8 +30,7 @@ public class ItemService {
     }
 
     public Collection<ItemDto> findAll(long userId) {
-        userService.checkUserById(userId);
-        User user = userRepository.getById(userId).get();
+        User user = checkAndReturnUser(userId);
         return itemRepository.findAllByOwner(user).stream().map(ItemMapper::pojoToDto).toList();
     }
 
@@ -46,8 +45,7 @@ public class ItemService {
 
     public ItemDto createItem(ItemDto itemDto, long userId) {
         Item item = ItemMapper.dtoToPojo(itemDto);
-        userService.checkUserById(userId);
-        User owner = userRepository.getById(userId).get();
+        User owner = checkAndReturnUser(userId);
         item.setOwner(owner);
 
         Item savedItem = itemRepository.save(item);
@@ -56,11 +54,8 @@ public class ItemService {
     }
 
     public ItemDto editItem(ItemDto itemDto, long id, long userId) {
-        checkItemById(id);
-        userService.checkUserById(userId);
-
-        User owner = userRepository.getById(userId).get();
-        Item item = itemRepository.getById(id).get();
+        User owner = checkAndReturnUser(userId);
+        Item item = checkAndReturnItem(id);
         if (!item.getOwner().equals(owner)) throw new AccessException("Редактировать ресурс может только его автор");
 
         item = ItemMapper.dtoToPojo(itemDto);
@@ -73,11 +68,8 @@ public class ItemService {
     }
 
     public void deleteItem(long id, long userId) {
-        checkItemById(id);
-        userService.checkUserById(userId);
-
-        User owner = userRepository.getById(userId).get();
-        Item item = itemRepository.getById(id).get();
+        User owner = checkAndReturnUser(userId);
+        Item item = checkAndReturnItem(id);
         if (!item.getOwner().equals(owner)) throw new AccessException("Удалить ресурс может только его автор");
 
         itemRepository.deleteById(id);
@@ -88,5 +80,15 @@ public class ItemService {
         if (!itemRepository.existsById(id)) {
             throw new NoSuchItemException("Не найдена вещь " + id);
         }
+    }
+
+    private Item checkAndReturnItem(long id) {
+        checkItemById(id);
+        return itemRepository.getById(id).get();
+    }
+
+    private User checkAndReturnUser(long id) {
+        userService.checkUserById(id);
+        return userRepository.getById(id).get();
     }
 }

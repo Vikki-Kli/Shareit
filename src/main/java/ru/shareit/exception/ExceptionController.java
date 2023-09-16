@@ -19,10 +19,14 @@ public class ExceptionController {
     @ExceptionHandler(DataIntegrityViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> sqlExceptionHandler(Exception e) {
-        if (e.getClass() == DataIntegrityViolationException.class && e.getMessage().contains("повторяющееся значение ключа нарушает ограничение уникальности \"unique_name_for_user\""))
+        if (e.getClass() == DataIntegrityViolationException.class && e.getMessage().contains("ограничение уникальности \"unique_name_for_user\""))
             return Map.of("ошибка: ", "У вас уже есть вещь с таким именем");
-        else if (e.getClass() == DataIntegrityViolationException.class && e.getMessage().contains("повторяющееся значение ключа нарушает ограничение уникальности \"unique_email\""))
+        else if (e.getClass() == DataIntegrityViolationException.class && e.getMessage().contains("ограничение уникальности \"unique_email\""))
             return Map.of("ошибка: ", "Эта почта уже используется");
+        else if (e.getClass() == DataIntegrityViolationException.class &&
+                (e.getMessage().contains("ограничение уникальности \"unique_i_feedback\"")
+                        || e.getMessage().contains("ограничение уникальности \"unique_r_feedback\"")) )
+            return Map.of("ошибка: ", "Ваш отзыв уже добавлен");
         else return Map.of("ошибка: ", e.getMessage());
     }
 

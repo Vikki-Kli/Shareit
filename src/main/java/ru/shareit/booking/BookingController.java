@@ -3,6 +3,8 @@ package ru.shareit.booking;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/bookings")
@@ -41,5 +43,23 @@ public class BookingController {
         bookingService.approveOrRejectBooking(id, userId, isApproved);
         if (isApproved) return "Booking " + id + " has been approved";
         else return "Booking " + id + " has been rejected";
+    }
+
+    @PostMapping("/{bookingId}/feedback")
+    public String addFeedbackForItem(@Valid @RequestBody String text,
+                                       @RequestHeader("X-ShareIt-User-Id") long userId,
+                                       @PathVariable long bookingId) {
+        bookingService.addFeedback(text, userId, bookingId);
+        return "Your feedback has been added successfully";
+    }
+
+    @GetMapping("/item_feedbacks/{id}")
+    public List<String> getFeedbacksForItem(@PathVariable long id) {
+        return bookingService.getFeedbacksForItem(id);
+    }
+
+    @GetMapping("/renter_feedbacks/{id}")
+    public List<String> getFeedbacksForRenter(@PathVariable long id) {
+        return bookingService.getFeedbacksForRenter(id);
     }
 }

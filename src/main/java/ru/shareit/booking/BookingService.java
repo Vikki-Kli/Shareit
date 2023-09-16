@@ -4,6 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.shareit.booking.feedback.FeedbackForItem;
+import ru.shareit.booking.feedback.FeedbackForItemRepository;
+import ru.shareit.booking.feedback.FeedbackForRenter;
+import ru.shareit.booking.feedback.FeedbackForRenterRepository;
 import ru.shareit.exception.AccessException;
 import ru.shareit.exception.NoSuchItemException;
 import ru.shareit.item.Item;
@@ -14,6 +18,7 @@ import ru.shareit.user.UserRepository;
 import ru.shareit.user.UserService;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -23,27 +28,31 @@ public class BookingService {
     private BookingRepository bookingRepository;
     private UserRepository userRepository;
     private ItemRepository itemRepository;
+    private FeedbackForRenterRepository feedbackForRenterRepository;
+    private FeedbackForItemRepository feedbackForItemRepository;
     private UserService userService;
     private ItemService itemService;
 
     public BookingService(@Qualifier("bookingRepositoryJPA") BookingRepository bookingRepository,
                           @Qualifier("userRepositoryJPA") UserRepository userRepository,
                           @Qualifier("itemRepositoryJPA") ItemRepository itemRepository,
+                          @Qualifier("feedbackForItemRepositoryJPA") FeedbackForItemRepository feedbackForItemRepository,
+                          @Qualifier("feedbackForRenterRepositoryJPA") FeedbackForRenterRepository feedbackForRenterRepository,
                           UserService userService,
                           ItemService itemService) {
         this.bookingRepository = bookingRepository;
         this.userRepository = userRepository;
         this.itemRepository = itemRepository;
+        this.feedbackForItemRepository = feedbackForItemRepository;
+        this.feedbackForRenterRepository = feedbackForRenterRepository;
         this.userService = userService;
         this.itemService = itemService;
     }
 
     public BookingDtoOut getBooking(long bookingId, long userId){
-        checkBookingById(bookingId);
-        userService.checkUserById(userId);
+        User user = checkAndReturnUser(userId);
+        Booking booking = checkAndReturnBooking(bookingId);
 
-        User user = userRepository.getById(userId).get();
-        Booking booking = bookingRepository.getById(bookingId).get();
         if (!booking.getRenter().equals(user) && !booking.getItem().getOwner().equals(user))
             throw new AccessException("Бронирование могут просматривать только арендатор и арендодатель");
 
@@ -73,11 +82,9 @@ public class BookingService {
     }
 
     public void cancelBooking(long bookingId, long userId){
-        checkBookingById(bookingId);
-        userService.checkUserById(userId);
+        User user = checkAndReturnUser(userId);
+        Booking booking = checkAndReturnBooking(bookingId);
 
-        User user = userRepository.getById(userId).get();
-        Booking booking = bookingRepository.getById(bookingId).get();
         if (!booking.getRenter().equals(user))
             throw new AccessException("Бронирование может отменить только арендатор");
         if (!booking.getStatus().equals(Status.WAITING))
@@ -89,11 +96,9 @@ public class BookingService {
     }
 
     public void approveOrRejectBooking(long bookingId, long userId, boolean isApproved){
-        checkBookingById(bookingId);
-        userService.checkUserById(userId);
+        User user = checkAndReturnUser(userId);
+        Booking booking = checkAndReturnBooking(bookingId);
 
-        User user = userRepository.getById(userId).get();
-        Booking booking = bookingRepository.getById(bookingId).get();
         if (!booking.getItem().getOwner().equals(user))
             throw new AccessException("Согласие или отказ в брони может дать только владелец вещи");
         if (!booking.getStatus().equals(Status.WAITING))
@@ -115,5 +120,52 @@ public class BookingService {
         if (!bookingRepository.existsById(id)) {
             throw new NoSuchItemException("Не найдено бронирование " + id);
         }
+    }
+
+    public void addFeedback(String text, long userId, long bookingId) {
+        User user = checkAndReturnUser(userId);
+        Booking booking = checkAndReturnBooking(bookingId);
+
+        if (booking.getStart().isAfter(LocalDate.now()) || booking.getStatus() != Status.APPROVED)
+            throw new AccessException("На эту бронь нельзя оставить отзыв");
+
+        if (booking.getRenter().equals(user)) {
+            FeedbackForItem feedback = new FeedbackForItem();
+            feedback.setBooking(booking);
+            feedback.setText(text);
+            feedbackForItemRepository.save(feedback);
+        }
+        else if (booking.getItem().getOwner().equals(user)) {
+            FeedbackForRenter feedback = new FeedbackForRenter();
+            feedback.setBooking(booking);
+            feedback.setText(text);
+            feedbackForRenterRepository.save(feedback);
+        }
+        else throw new AccessException("Вы не можете добавлять отзывы к чужой брони");
+    }
+
+    public List<String> getFeedbacksForItem(long id) {
+        Item item = checkAndReturnItem(id);
+        return feedbackForItemRepository.findAllByBooking_itemEquals(item).stream().map(FeedbackForItem::getText).toList();
+    }
+
+    public List<String> getFeedbacksForRenter(long id) {
+        User user = checkAndReturnUser(id);
+        return feedbackForRenterRepository.findAllByBooking_renterEquals(user).stream().map(FeedbackForRenter::getText).toList();
+    }
+
+    private User checkAndReturnUser(long id) {
+        userService.checkUserById(id);
+        return userRepository.getById(id).get();
+    }
+
+    private Booking checkAndReturnBooking(long id) {
+        checkBookingById(id);
+        return bookingRepository.getById(id).get();
+    }
+
+    private Item checkAndReturnItem(long id) {
+        itemService.checkItemById(id);
+        return itemRepository.getById(id).get();
     }
 }
