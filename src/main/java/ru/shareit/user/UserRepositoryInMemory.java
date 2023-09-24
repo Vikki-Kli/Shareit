@@ -25,7 +25,7 @@ public class UserRepositoryInMemory implements UserRepository {
     }
 
     @Override
-    public Optional<User> getById(long id) {
+    public Optional<User> findById(long id) {
         if (!existsById(id)) throw new NoSuchUserException("Пользователь " + id + " не существует");
         return Optional.ofNullable(users.get(id));
     }
@@ -39,7 +39,7 @@ public class UserRepositoryInMemory implements UserRepository {
         }
         users.put(user.getId(), user);
         log.info("{} has been edited", user);
-        return getById(user.getId()).get();
+        return findById(user.getId()).get();
     }
 
     @Override
@@ -52,6 +52,11 @@ public class UserRepositoryInMemory implements UserRepository {
     @Override
     public boolean existsById(long id) {
         return users.containsKey(id);
+    }
+
+    @Override
+    public void deleteAll() {
+        users.clear();
     }
 
 }

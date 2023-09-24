@@ -73,7 +73,7 @@ public class BookingService {
         Item item = itemRepository.getById(itemId).get();
         if (!item.getAvailable()) throw new NoSuchItemException("Вещь пока недоступна для аренды");
         booking.setItem(item);
-        User renter = userRepository.getById(userId).get();
+        User renter = userRepository.findById(userId).get();
         booking.setRenter(renter);
 
         Booking savedBooking = bookingRepository.save(booking);
@@ -156,7 +156,7 @@ public class BookingService {
 
     private User checkAndReturnUser(long id) {
         userService.checkUserById(id);
-        return userRepository.getById(id).get();
+        return userRepository.findById(id).get();
     }
 
     private Booking checkAndReturnBooking(long id) {

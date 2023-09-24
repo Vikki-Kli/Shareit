@@ -18,7 +18,7 @@ public class ExceptionController {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> sqlExceptionHandler(Exception e) {
+    public Map<String, String> handleSqlException(Exception e) {
         if (e.getClass() == DataIntegrityViolationException.class && e.getMessage().contains("ограничение уникальности \"unique_name_for_user\""))
             return Map.of("ошибка: ", "У вас уже есть вещь с таким именем");
         else if (e.getClass() == DataIntegrityViolationException.class && e.getMessage().contains("ограничение уникальности \"unique_email\""))
@@ -32,13 +32,13 @@ public class ExceptionController {
 
     @ExceptionHandler({NoSuchUserException.class, NoSuchItemException.class, EntityNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, String> objectNotFoundHandler(Exception e) {
+    public Map<String, String> handleObjectNotFound(Exception e) {
         return Map.of("ошибка: ", e.getMessage());
     }
 
     @ExceptionHandler(AccessException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public Map<String, String> accessDeniedHandler(Exception e) {
+    public Map<String, String> handleAccessDenied(Exception e) {
         return Map.of("ошибка: ", e.getMessage());
     }
 
@@ -47,13 +47,13 @@ public class ExceptionController {
             ValidationException.class,
             MethodArgumentTypeMismatchException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> deserializeAndValidationExceptionHandler(Exception e) {
+    public Map<String, String> handleDeserializeAndValidationException(Exception e) {
         return Map.of("ошибка: ", "неправильно введены данные. Попробуйте еще раз");
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Map<String, String> someExceptionHandler(Exception e) {
+    public Map<String, String> handleSomeException(Exception e) {
         System.out.println(e.getClass());
         System.out.println(e.getMessage());
         for(StackTraceElement i : e.getStackTrace()) System.out.println(i);

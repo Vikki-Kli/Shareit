@@ -8,8 +8,9 @@ import java.util.Optional;
 @NoRepositoryBean
 public interface UserRepository {
     Collection<User> findAll();
-    Optional<User> getById(long id);
+    Optional<User> findById(long id);
     User save(User user);
     void deleteById(long id);
     boolean existsById(long id);
+    void deleteAll();
 }

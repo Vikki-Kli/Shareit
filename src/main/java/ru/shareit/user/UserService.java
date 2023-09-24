@@ -25,7 +25,7 @@ public class UserService {
 
     public UserDto getUser(long id) {
         checkUserById(id);
-        return UserMapper.pojoToDto(userRepository.getById(id).get());
+        return UserMapper.pojoToDto(userRepository.findById(id).get());
     }
 
     public UserDto createUser(UserDto userDto) {

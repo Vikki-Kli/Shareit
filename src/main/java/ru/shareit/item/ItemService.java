@@ -89,6 +89,6 @@ public class ItemService {
 
     private User checkAndReturnUser(long id) {
         userService.checkUserById(id);
-        return userRepository.getById(id).get();
+        return userRepository.findById(id).get();
     }
 }
