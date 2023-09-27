@@ -3,14 +3,12 @@ package ru.shareit.booking;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
 @NoArgsConstructor
 public class BookingDtoOut {
 

@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface BookingRepository {
 
     boolean existsById(long id);
-    Optional<Booking> getById(long id);
+    Optional<Booking> findById(long id);
     Booking save(Booking booking);
     long checkCrossingBookings(LocalDate start, LocalDate finish);
 

@@ -1,6 +1,7 @@
 package ru.shareit.booking;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Past;
 import lombok.*;
 import ru.shareit.item.Item;
 import ru.shareit.user.User;
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 @Setter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "bookings")
 public class Booking {

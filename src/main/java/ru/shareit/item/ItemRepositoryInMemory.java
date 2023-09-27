@@ -34,7 +34,7 @@ public class ItemRepositoryInMemory implements ItemRepository {
     }
 
     @Override
-    public Optional<Item> getById(long id) {
+    public Optional<Item> findById(long id) {
         if (!items.containsKey(id)) throw new NoSuchItemException("Вещь " + id + " не существует");
         return Optional.ofNullable(items.get(id));
     }
@@ -48,7 +48,7 @@ public class ItemRepositoryInMemory implements ItemRepository {
         }
         items.put(item.getId(), item);
         log.info("{} has been saved", item);
-        return getById(item.getId()).get();
+        return findById(item.getId()).get();
     }
 
     @Override

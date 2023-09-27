@@ -3,8 +3,7 @@ package ru.shareit.need;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 public class NeedDto {
 

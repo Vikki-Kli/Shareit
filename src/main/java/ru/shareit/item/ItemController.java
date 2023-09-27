@@ -1,19 +1,17 @@
 package ru.shareit.item;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 
 @RestController
 @RequestMapping("/items")
+@RequiredArgsConstructor
 public class ItemController {
 
-    private ItemService itemService;
-
-    public ItemController(ItemService itemService) {
-        this.itemService = itemService;
-    }
+    private final ItemService itemService;
 
     @GetMapping()
     public Collection<ItemDto> findAll(@RequestHeader("X-ShareIt-User-Id") long userId) {

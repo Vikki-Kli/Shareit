@@ -1,19 +1,17 @@
 package ru.shareit.user;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 
 @RestController
 @RequestMapping("/users")
+@RequiredArgsConstructor
 public class UserController {
 
-    private UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+    private final UserService userService;
 
     @GetMapping()
     public Collection<UserDto> findAll() {

@@ -19,7 +19,7 @@ public class BookingRepositoryInMemory implements BookingRepository{
     private static long countId = 0;
 
     @Override
-    public Optional<Booking> getById(long id) {
+    public Optional<Booking> findById(long id) {
         if (!bookings.containsKey(id)) throw new NoSuchItemException("Бронирование " + id + " не существует");
         return Optional.ofNullable(bookings.get(id));
     }
@@ -33,7 +33,7 @@ public class BookingRepositoryInMemory implements BookingRepository{
         }
         bookings.put(booking.getId(), booking);
         log.info("{} has been saved", booking);
-        return getById(booking.getId()).get();
+        return findById(booking.getId()).get();
     }
 
     @Override

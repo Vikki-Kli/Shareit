@@ -1,6 +1,7 @@
 package ru.shareit.booking;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -8,13 +9,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/bookings")
+@RequiredArgsConstructor
 public class BookingController {
 
-    private BookingService bookingService;
-
-    public BookingController(BookingService bookingService) {
-        this.bookingService = bookingService;
-    }
+    private final BookingService bookingService;
 
     @GetMapping("/{id}")
     public BookingDtoOut getBooking(@PathVariable long id,

@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface ItemRepository {
     Collection<Item> findAllByOwner(User user);
     Collection<Item> findByDescriptionContainingIgnoreCase(String text);
-    Optional<Item> getById(long id);
+    Optional<Item> findById(long id);
     Item save(Item item);
     void deleteById(long id);
     boolean existsById(long id);

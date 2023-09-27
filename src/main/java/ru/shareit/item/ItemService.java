@@ -17,9 +17,9 @@ import java.util.Collection;
 @Transactional
 public class ItemService {
 
-    private ItemRepository itemRepository;
-    private UserRepository userRepository;
-    private UserService userService;
+    private final ItemRepository itemRepository;
+    private final UserRepository userRepository;
+    private final UserService userService;
 
     public ItemService(@Qualifier("itemRepositoryJPA") ItemRepository itemRepository,
                        @Qualifier("userRepositoryJPA") UserRepository userRepository,
@@ -36,7 +36,7 @@ public class ItemService {
 
     public ItemDto getItem(long id) {
         checkItemById(id);
-        return ItemMapper.pojoToDto(itemRepository.getById(id).get());
+        return ItemMapper.pojoToDto(itemRepository.findById(id).get());
     }
 
     public Collection<ItemDto> search(String text) {
@@ -84,7 +84,7 @@ public class ItemService {
 
     private Item checkAndReturnItem(long id) {
         checkItemById(id);
-        return itemRepository.getById(id).get();
+        return itemRepository.findById(id).get();
     }
 
     private User checkAndReturnUser(long id) {

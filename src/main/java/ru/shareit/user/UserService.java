@@ -13,7 +13,7 @@ import java.util.Collection;
 @Transactional
 public class UserService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public UserService(@Qualifier("userRepositoryJPA") UserRepository userRepository) {
         this.userRepository = userRepository;

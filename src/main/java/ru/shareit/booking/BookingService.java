@@ -25,13 +25,13 @@ import java.util.List;
 @Transactional
 public class BookingService {
 
-    private BookingRepository bookingRepository;
-    private UserRepository userRepository;
-    private ItemRepository itemRepository;
-    private FeedbackForRenterRepository feedbackForRenterRepository;
-    private FeedbackForItemRepository feedbackForItemRepository;
-    private UserService userService;
-    private ItemService itemService;
+    private final BookingRepository bookingRepository;
+    private final UserRepository userRepository;
+    private final ItemRepository itemRepository;
+    private final FeedbackForRenterRepository feedbackForRenterRepository;
+    private final FeedbackForItemRepository feedbackForItemRepository;
+    private final UserService userService;
+    private final ItemService itemService;
 
     public BookingService(@Qualifier("bookingRepositoryJPA") BookingRepository bookingRepository,
                           @Qualifier("userRepositoryJPA") UserRepository userRepository,
@@ -70,7 +70,7 @@ public class BookingService {
 
         Booking booking = BookingMapper.dtoToPojo(bookingDtoIn);
 
-        Item item = itemRepository.getById(itemId).get();
+        Item item = itemRepository.findById(itemId).get();
         if (!item.getAvailable()) throw new NoSuchItemException("Вещь пока недоступна для аренды");
         booking.setItem(item);
         User renter = userRepository.findById(userId).get();
@@ -161,11 +161,11 @@ public class BookingService {
 
     private Booking checkAndReturnBooking(long id) {
         checkBookingById(id);
-        return bookingRepository.getById(id).get();
+        return bookingRepository.findById(id).get();
     }
 
     private Item checkAndReturnItem(long id) {
         itemService.checkItemById(id);
-        return itemRepository.getById(id).get();
+        return itemRepository.findById(id).get();
     }
 }
